@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
 <html>
+
 	<head>
+		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="mtstyle.css">
 
 			<title>I244 Võrgurakendused 1 Praktikum 1</title>
@@ -36,9 +37,7 @@
 			var myCountdown1 = new Countdown({time:600});
 		</script>
 
-
 		<h1>Pealkiri1</h1>
-
 		<h2>Pealkiri2</h2>
 		<h3>Pealkiri3</h3>
 		<h4>Pealkiri4</h4>
@@ -51,25 +50,33 @@
 
 		<em>kursiivis text</em>
 
-		<ul>
-			<li>level 1</li>
-			<ul>
-				<li>level 2</li>
+		<ul><li>Level 0</li>
+			<li>Level 0</li>
+			<li>Level 0
 				<ul>
-					<li>level 3</li>
-				</ul>
-			</ul>
-		</ul>
-		<ol>
-			<li>level 1</li>
-			<ul>
-				<li>level 2</li>
-				<ul>
-					<li>level 3</li>
-				</ul>
-			</ul>
-		</ul>
+					<li>level 1</li>
+					<li>level 1</li>
+					<li>level 1
+					<ul>
+						<li>level 2</li>
+						<li>level 2</li>
+						<li>level 2
+						<ul>
+							<li>level 3</li>
+							<li>level 3</li>
+							<li>level 3</li>
+						</ul>
+					</li></ul>
+				</li></ul>
+			</li></ul>
+		
+
+		<ol start="42">
+		  <li>This</li>
+		  <li>Is</li>
+		  <li>Life</li>
 		</ol>
+
 		<pre> Preformaaditud text (tavaliselt Courier) </pre>
 
 		<button type="button" onclick="myFunction()">Proovi mind!</button>
@@ -81,6 +88,5 @@
 		</p>
 
 	</body>
-
 
 </html>
