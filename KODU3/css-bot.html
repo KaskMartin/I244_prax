@@ -4,7 +4,46 @@
 	<meta charset="utf-8" />
 	<title>Praktikum 03 - selektorite ülesanne</title>
 	<style type="text/css">
-	/*  SIIN KIRJELDADA SELEKTORID NING ELEMENDIS NÕUTUD STIIL */
+		p {
+			color: red;
+		}
+
+		div {
+			width: 300px;
+			text-align: center;
+		}
+
+		li {
+			width: 90%;
+			background-color: #c0c0c0;
+			list-style:none;
+		}
+
+		div > p {
+			background-color: gray;
+		}
+
+		#keha {
+			background-color: gray;
+		}
+		#pea span {
+			background-color:#c0c0c0;
+			font-size: 30px;
+		}
+
+		.jalg {
+			background-color: gray;
+			color: white;
+		}
+	/*  SIIN KIRJELDADA SELEKTORID NING ELEMENDIS NÕUTUD STIIL
+	kõigi paragrahvide tekst olgu punane (color:red;)
+kõik div-id olgu 300px laiad ning tekst nede sees keskele joondatud (text-align:center;)
+listielemendid olgu 90% laiused, taustavärviga #c0c0c0 ning ilma listi stiilita (list-style:none;)
+paragrahvid, mis on otse div elemendi vahel omagu halli taustavärvi. Kui paragrahvi ja div-i vahel on veel teisigi elemente nag nt li, ul, siis ei tohiks stiil rakenduda
+elemengil id-ga keha olgu ka hall taust
+span elementidel, mis asuvad elemendis id-ga pea, olgu taustavärviks #c0c0c0 ning teksti suuruseks 30px (font-size:30px;)
+elementidel, mis jagavad klassi jalg olgu taustavärvus hall ja tekstivärvus valge
+	*/
 	
 	</style>
 </head>
