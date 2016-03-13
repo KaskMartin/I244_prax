@@ -1,0 +1,39 @@
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: navy;
+    margin-left: 40px;
+}
+
+#Pealkiri {
+    color: blue;
+}
+.lehesisu {
+    background-color: #9affeb;
+    text-align: justify;
+}
+#menu {
+    font-weight: 600;
+    font-size: large;
+    text-shadow: 3px -3px 5px black;
+    /*
+    display: none
+    */
+}
+
+#menu a:hover {
+    color: black;
+    font-weight: bolder;
+    text-decoration: none;
+    text-shadow: 3px -3px 5px snow;
+}
+
+image {
+    border: thick #1924ff;
+}
+
+#validaator {
+    border: none;
+}
