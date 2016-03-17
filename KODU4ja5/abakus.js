@@ -10,6 +10,9 @@ window.onload = function() {
     for ( ;i<len; ++i) p2rliteNimistu[i].onclick = function() {floatFlipper(this)};
 
     function floatFlipper(flippable) {
+        if (flippable.style.cssFloat = undefined) {
+            flippable.className == "bead" ? flippable.style.cssFloat = "right" : flippable.style.cssFloat = "left";
+        }
         flippable.style.cssFloat = (flippable.style.cssFloat == "right") ? "left" : "right";
     };
 
