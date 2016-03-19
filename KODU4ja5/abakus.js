@@ -10,10 +10,15 @@ window.onload = function() {
     for ( ;i<len; ++i) p2rliteNimistu[i].onclick = function() {floatFlipper(this)};
 
     function floatFlipper(flippable) {
-        if (flippable.style.cssFloat = undefined) {
-            flippable.className == "bead" ? flippable.style.cssFloat = "right" : flippable.style.cssFloat = "left";
+        if (flippable.getAttribute("style")==null ||
+            flippable.getAttribute("style")=="") {
+            if (flippable.className == "parembead") {
+                flippable.style.cssFloat = "left";
+            } else {
+                flippable.style.cssFloat = "right";
+            }
         }
-        flippable.style.cssFloat = (flippable.style.cssFloat == "right") ? "left" : "right";
+        else flippable.style.cssFloat = (flippable.style.cssFloat == "left" ? "right" : "left");
     };
 
 };
