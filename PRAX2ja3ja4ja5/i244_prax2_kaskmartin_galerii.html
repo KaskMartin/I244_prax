@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="mtstyle.css">
+    <title>I244 Võrgurakendused 2 Praxid 2,3 ja 4</title>
+    <script src="galerii.js"></script>
+</head>
+
+<body>
+<div class="lehesisu">
+    <h1 class="Pealkiri">Galerii</h1>
+    <ul class="menu">
+        <li>
+            <a href="i244_prax2_kaskmartin_pealeht.html">Pealeht</a>
+        </li>
+
+        <li>
+            <a href="i244_prax2_kaskmartin_logisisse.html">Logi Sisse</a>
+        </li>
+
+        <li>
+            <a href="i244_prax2_kaskmartin_registreeru.html">Registreeru</a>
+        </li>
+
+        <li>
+            <a href="i244_prax2_kaskmartin_galerii.html">Galerii</a>
+        </li>
+
+        <li>
+            <a href="i244_prax2_kaskmartin_detailid.html">Detailid</a>
+        </li>
+
+        <li>
+            <a href="i244_prax2_kaskmartin_laefail.html">Lae Faile Üles</a>
+        </li>
+    </ul>
+
+
+    <div id="galeriipildid">
+        <br/>
+        <a href="img/cat_pic.jpg">
+            <img class="thumb" src="thumb/cat_thumbnail.jpg" alt="Kassi pilt1, Autor teadmata" />
+        </a>
+        <a href="img/grumpy2_pic.jpg">
+            <img class="thumb" src="thumb/grumpy2_thumbnail.jpg" alt="Kassi pilt2, Autor teadmata" />
+        </a>
+    </div>
+
+    <div id="hoidja" style="display:none;">
+        <div id="taust"></div>
+        <div id="tabel">
+            <div id="cell">
+                <div id="sulge" onclick="hideDetails();">Sulge</div>
+                <div id="sisu">
+                    <img id="suurpilt" src="?" alt="ajutine"/><br/>
+                    <span id="inf"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
