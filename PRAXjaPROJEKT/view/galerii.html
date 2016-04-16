@@ -1,9 +1,10 @@
-    <div id="galeriipildid">
+<script src="./galerii.js"></script>
+<div id="galeriipildid">
         <?php
          foreach ($pildid as &$value) {
             echo "
-                <a class='disabledAnchor' href='$value[big]'>\n
-                <img class='thumb' src='$value[small]' alt='$value[alt]' /> \n
+                <a class=\"kiisuke\" href=\"?mode=pilt&id=".$value['id']."\">\n
+                <img class=\"thumb\" src=\"".$value['small']."\" alt=\"".$value['alt']."\" /> \n
                 </a>\n";
         }
         ?>

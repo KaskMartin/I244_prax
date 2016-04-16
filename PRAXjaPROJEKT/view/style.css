@@ -2,6 +2,12 @@ body {
     background-color: lightblue;
 }
 
+.kiisuke {
+    cursor: default;
+    color: #9affeb;
+    text-decoration: none;
+}
+
 h1 {
     color: navy;
     margin-left: 40px;
@@ -81,7 +87,8 @@ image {
     display: table;
     margin: auto;
     background: rgba(0,0,0,0.7);
-    padding: 10px;
+    padding: 10px 40px;
+    position:relative;
 }
 #sulge { /* sulgemise element */
     position: fixed;
@@ -95,14 +102,34 @@ image {
     height: 0px;
 }
 
-a.disabledAnchor {
-    /* pointer-events: none; */
-    cursor: default;
-    color:#9affeb;
-    height: 0px;
-
+#prev, #next {
+    display:block;
+    position: absolute;
+    top:0px;
+    bottom:0px;
+    width: 40px;
+}
+#prev:hover, #next:hover{
+    background-color: rgba(255,255,255,0.1);
+}
+#prev {
+    left:0px;
+    background: url("../img/prev.png") center no-repeat;
+    height: 45px;
+    width: 32px;
+}
+#next {
+    right:0px;
+    background: url("../img/next.png") center no-repeat;
+    height: 45px;
+    width: 32px;
 }
 
-.thumb {
-padding: 4px;
+#inf {
+    color: white;
+}
+
+.kiisuke {
+    text-decoration: none;
+    color: #9affeb;
 }

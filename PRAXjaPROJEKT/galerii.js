@@ -4,7 +4,7 @@
 window.onload = function() {
     if (document.getElementsByClassName('hoidja') != null) {
         console.log("Käivitan galerii!");
-        var pictureArray = document.getElementById('galeriipildid').getElementsByTagName('img');
+        var pictureArray = document.getElementById('galeriipildid').getElementsByTagName('a');
         console.log(pictureArray);
         for (var i = 0; i < pictureArray.length; i++) {
             pictureArray[i].onclick = function() {
@@ -37,12 +37,9 @@ function suurus(el) {
 
 function showDetails(el) {
     console.log(el);
-    var suurpilt = document.getElementById("suurpilt");
-    var viide = el.parentNode.getAttributeNode("href").value.toString();
-    var autor = el.getAttributeNode("alt").value.toString();
-    suurpilt.setAttribute("src", viide);
-    document.getElementById("inf").innerHTML = autor;
-    suurpilt.onload = function() {suurus(this)};
+    $.get(el.href, "html", function(data){
+        document.getElementById('sisu').innerHTML=data;
+    });
     document.getElementById("hoidja").setAttribute("style", "display:initial");
 }
 
@@ -50,6 +47,6 @@ function hideDetails () {
     document.getElementById("hoidja").setAttribute("style", "display:none");
 }
 window.onresize=function() {
-    suurpilt=document.getElementById("suurpilt");
+    var suurpilt=document.getElementById("suurpilt");
     suurus(suurpilt);
 };
