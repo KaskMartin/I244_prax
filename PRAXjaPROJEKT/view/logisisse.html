@@ -1,7 +1,9 @@
 	<form action="?mode=logisisse" method="post" id="f1">
 			<table>
 					<tr>
-						<td>Kasutajanimi</td><td><input type="text" name="Kasutajanimi"></td>
+						<td>Kasutajanimi</td><td><input type="text" name="Kasutajanimi" value="<?php
+						 if (!empty($_POST) && !empty($_POST['Kasutajanimi'])) {echo htmlspecialchars($_POST['Kasutajanimi']);}
+						 ?>"></td>
 					</tr>
 
 					<tr>

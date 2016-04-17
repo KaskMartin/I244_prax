@@ -13,25 +13,29 @@ function kuva_laefail () {
 };
 
 function kuva_logisisse () {
+    $errorid = array ();
 
     if (!empty($_POST)) {
-        $errorid = array ();
 
         if (empty($_POST["Kasutajanimi"])) {
             array_push($errorid, "Kasutajanimi puudu!");
         }
 
         if (empty($_POST["Parool"])) {
-            array_push($errorid, "Parool puudu!");;
+            array_push($errorid, "Parool puudu!");
         }
 
         if (empty($errorid)) {
-            header('Location: ?mode=pealeht');
-            exit;
+            header('Location: ?mode=galerii');
+            exit(0);
         }
     }
 
     require_once('view/head.html');
+    if (!empty($errorid)) {
+        echo implode("</br>", $errorid);
+        echo "</br>";
+    }
     require_once('view/logisisse.html');
     require_once('view/foot.html');
 };

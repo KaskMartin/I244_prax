@@ -1,4 +1,5 @@
 <?php
+global $pildid;
 $pildid=array(
     array("big"=>"img/cat_pic.jpg", "small"=>"thumb/cat_thumbnail.jpg", "alt"=>"Kassi pilt1, Autor teadmata", "id"=>"1"),
     array("big"=>"img/grumpy2_pic.jpg", "small"=>"thumb/thmb_cat2_pic.png", "alt"=>"Kassi pilt2, Autor teadmata", "id"=>"2"),
