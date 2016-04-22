@@ -1,4 +1,8 @@
-	<div id="wrap">
+<?php if (!empty($_SESSION["voted_for"])) {
+    header("Location: ?mode=tulemus");
+}
+?>
+<div id="wrap">
 	<h3>Vali oma lemmik :)</h3>
 	<form action="?mode=tulemus" method="POST">
 		<?php
