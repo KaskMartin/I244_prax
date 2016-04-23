@@ -37,6 +37,10 @@
 			var myCountdown1 = new Countdown({time:600});
 		</script>
 
+		<p>
+			<?php include("UserStat.php");?>
+		</p>
+
 		<h1>Pealkiri1</h1>
 		<h2>Pealkiri2</h2>
 		<h3>Pealkiri3</h3>
