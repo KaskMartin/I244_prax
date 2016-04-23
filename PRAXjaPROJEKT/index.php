@@ -1,5 +1,6 @@
 <?php
 include('functions.php');
+alusta_sessioon();
 
 $mode = 'pealeht';
 
@@ -24,6 +25,10 @@ switch ($mode) {
         break;
     case 'pilt':{
         kuva_pilt();
+        break;
+    }
+    case 'logiv2lja':{
+        kuva_logiv2lja();
         break;
     }
     default:

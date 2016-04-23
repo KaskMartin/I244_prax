@@ -1,13 +1,33 @@
 <?php
+$_SESSION['logitud']="";
+
+function alusta_sessioon(){
+    ini_set("session.cookie_lifetime",30*60);
+    session_start();
+}
+
+function lopeta_sessioon(){
+    $_SESSION = array();
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(session_name(), '', time()-42000, '/');
+    }
+    session_destroy();
+}
+
 function kuva_galerii () {
-    require_once('view/head.html');
+    require_once('view/head.php');
     include('view/pildid.php');
     require_once('view/galerii.html');
     require_once('view/foot.html');
 };
 
 function kuva_laefail () {
-    require_once('view/head.html');
+    if (empty($_SESSION['logitud']) || $_SESSION['logitud'] != 'true' ) {
+        $_SESSION['logimisteade']="Vabandame, kuid pilte lisada saavad ainult registreerunud kasutajad.";
+        header('Location: ?mode=galerii');
+        exit(0);
+    }
+    require_once('view/head.php');
     require_once('view/laefail.html');
     require_once('view/foot.html');
 };
@@ -21,17 +41,27 @@ function kuva_logisisse () {
             array_push($errorid, "Kasutajanimi puudu!");
         }
 
+        if ($_POST["Kasutajanimi"] != 'kasutaja') {
+            array_push($errorid, "Vale kasutaja nimi!");
+        }
+
         if (empty($_POST["Parool"])) {
             array_push($errorid, "Parool puudu!");
         }
 
+        if ($_POST["Parool"] != 'parool') {
+            array_push($errorid, "Vale parool!");
+        }
+
         if (empty($errorid)) {
+            $_SESSION['logitud']='true';
+            $_SESSION['logimisteade']='Oled edukalt sisse loginud!';
             header('Location: ?mode=galerii');
             exit(0);
         }
     }
 
-    require_once('view/head.html');
+    require_once('view/head.php');
     if (!empty($errorid)) {
         echo implode("</br>", $errorid);
         echo "</br>";
@@ -41,9 +71,15 @@ function kuva_logisisse () {
 };
 
 function kuva_registreeru () {
-    require_once('view/head.html');
+    require_once('view/head.php');
     require_once('view/registreeru.html');
     require_once('view/foot.html');
+};
+
+function kuva_logiv2lja() {
+    lopeta_sessioon();
+    header('Location: ?mode=ElPHPant');
+    exit(0);
 };
 
 function kuva_pilt () {
@@ -69,8 +105,17 @@ function kuva_pilt () {
 };
 
 function kuva_pealeht () {
-    require_once('view/head.html');
+    require_once('view/head.php');
     require_once('view/pealeht.html');
     require_once('view/foot.html');
 };
+
+function on_logitud() {
+    if (!empty($_SESSION['logitud'])) {
+        if ($_SESSION['logitud'] == 'true') {
+            return true;
+        }
+    }
+    return false;
+}
 ?>
