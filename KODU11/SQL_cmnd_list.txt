@@ -1,0 +1,67 @@
+CREATE TABLE 10152870_loomaaed (id integer PRIMARY KEY auto_increment, nimi varchar(50) UNIQUE, vanus integer, liik varchar(50), puur integer);
+
+INSERT INTO  `10152870_loomaaed` (  `id` ,  `nimi` ,  `vanus` ,  `liik` ,  `puur` )  VALUES ('1',  'Kiisuke',  '3',  'L6vi',  '1'),
+ ('2','Leonard', '5', 'L6vi', '1'),
+ ('3','Toiduke', '1', 'J2nes', '1'),
+ ('4','Lucky', '2', 'J2nes', '2'),
+ ('5','Strangu', '8', 'Python', '3'),
+ ('6','NotSoLucky', '1', 'J2nes', '3');
+
+ +----+------------+-------+--------+------+
+ | id | nimi       | vanus | liik   | puur |
+ +----+------------+-------+--------+------+
+ |  1 | Kiisuke    |     3 | L6vi   |    1 |
+ |  2 | Leonard    |     5 | L6vi   |    1 |
+ |  3 | Toiduke    |     1 | J2nes  |    1 |
+ |  4 | Lucky      |     2 | J2nes  |    2 |
+ |  5 | Strangu    |     8 | Python |    3 |
+ |  6 | NotSoLucky |     1 | J2nes  |    3 |
+ +----+------------+-------+--------+------+
+
+
+SELECT nimi, puur FROM `10152870_loomaaed` WHERE puur=1;
+
++---------+------+
+| nimi    | puur |
++---------+------+
+| Kiisuke |    1 |
+| Leonard |    1 |
+| Toiduke |    1 |
++---------+------+
+
+SELECT max(vanus), min(vanus) FROM `10152870_loomaaed`;
++------------+------------+
+| max(vanus) | min(vanus) |
++------------+------------+
+|          8 |          1 |
++------------+------------+
+
+
+
+SELECT puur, COUNT(id) AS "Loomade arv puuris" FROM `10152870_loomaaed` GROUP BY puur;
++------+--------------------+
+| puur | Loomade arv puuris |
++------+--------------------+
+|    1 |                  3 |
+|    2 |                  1 |
+|    3 |                  2 |
++------+--------------------+
+
+UPDATE `10152870_loomaaed` SET vanus=vanus+1;
+
+mysql> UPDATE `10152870_loomaaed` SET vanus=vanus+1;
+Query OK, 6 rows affected (0.01 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> SELECT * FROM `10152870_loomaaed`;
++----+------------+-------+--------+------+
+| id | nimi       | vanus | liik   | puur |
++----+------------+-------+--------+------+
+|  1 | Kiisuke    |     4 | L6vi   |    1 |
+|  2 | Leonard    |     6 | L6vi   |    1 |
+|  3 | Toiduke    |     2 | J2nes  |    1 |
+|  4 | Lucky      |     3 | J2nes  |    2 |
+|  5 | Strangu    |     9 | Python |    3 |
+|  6 | NotSoLucky |     2 | J2nes  |    3 |
++----+------------+-------+--------+------+
+6 rows in set (0.00 sec)
