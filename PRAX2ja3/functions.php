@@ -26,17 +26,13 @@ function kuva_kysimused () {
         //print_r($kysimus);
         echo "<h2>Küsimus nr.{$j2rjekorranumber}</h2>";
         echo "<p>{$kysimus['Kysimus']}</p>";
-        foreach ($kysimus as &$variant)
+        foreach ($kysimus['Vastused'] as &$vastus)
             {
-                echo "<input type=";
+                echo "<p>{$vastus['variant']}</p>";
             }
 
         echo "";
-        if ($id == $value['id']) {
-            $kysimus =  $value;
-        };
-
-        */
+        $j2rjekorranumber++;
     };
     echo "<button type=\"submit\">Sisesta!</button></form>";
 
