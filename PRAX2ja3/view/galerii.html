@@ -1,0 +1,24 @@
+<script src="./galerii.js"></script>
+<div id="galeriipildid">
+        <?php
+         foreach ($pildid as &$value) {
+            echo "
+                <a class=\"kiisuke\" href=\"?mode=pilt&id=".$value['id']."\">\n
+                <img class=\"thumb\" src=\"".$value['small']."\" alt=\"".$value['alt']."\" /> \n
+                </a>\n";
+        }
+        ?>
+    </div>
+
+    <div id="hoidja" style="display:none;">
+        <div id="taust"></div>
+        <div id="tabel">
+            <div id="cell">
+                <div id="sulge" onclick="hideDetails();">Sulge</div>
+                <div id="sisu">
+                    <img id="suurpilt" src="?" alt="ajutine"/><br/>
+                    <span id="inf"></span>
+                </div>
+            </div>
+        </div>
+    </div>
