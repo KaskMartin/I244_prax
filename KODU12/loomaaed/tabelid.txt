@@ -1,0 +1,132 @@
+CREATE TABLE IF NOT EXISTS `markask_loomaaed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nimi` varchar(100) NOT NULL,
+  `puur` int(11) NOT NULL,
+  `liik` varchar(100) NOT NULL
+);
+
+
+INSERT INTO `<sinu kasutajanimi/kood>_loomaaed` (`id`, `nimi`, `puur`, `liik`) VALUES
+(1, 'Olaf', 8, 'pildid/bear.png'),
+(2, 'Kassper', 2, 'pildid/cat.png'),
+(3, 'Kaarel', 2, 'pildid/cat.png'),
+(4, 'Toomas', 2, 'pildid/cat.png'),
+(5, 'Rosso', 4, 'pildid/pig.png'),
+(6, 'Porco', 4, 'pildid/pig.png'),
+(7, 'Lucy', 5, 'pildid/monkey.png'),
+(8, 'Hopper', 8, 'pildid/rabbit.png'),
+(9, 'Maali', 7, 'pildid/cow.png'),
+(10, 'Kasper', 7, 'pildid/cow.png'),
+(11, 'Mingi', 7, 'pildid/cow.png');
+
+Array
+(
+    [8] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 1
+                    [nimi] => Olaf
+                    [puur] => 8
+                    [liik] => pildid/bear.png
+                )
+
+            [1] => Array
+                (
+                    [id] => 8
+                    [nimi] => Hopper
+                    [puur] => 8
+                    [liik] => pildid/rabbit.png
+                )
+
+        )
+
+    [2] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 2
+                    [nimi] => Kassper
+                    [puur] => 2
+                    [liik] => pildid/cat.png
+                )
+
+            [1] => Array
+                (
+                    [id] => 3
+                    [nimi] => Kaarel
+                    [puur] => 2
+                    [liik] => pildid/cat.png
+                )
+
+            [2] => Array
+                (
+                    [id] => 4
+                    [nimi] => Toomas
+                    [puur] => 2
+                    [liik] => pildid/cat.png
+                )
+
+        )
+
+    [4] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 5
+                    [nimi] => Rosso
+                    [puur] => 4
+                    [liik] => pildid/pig.png
+                )
+
+            [1] => Array
+                (
+                    [id] => 6
+                    [nimi] => Porco
+                    [puur] => 4
+                    [liik] => pildid/pig.png
+                )
+
+        )
+
+    [5] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [nimi] => Lucy
+                    [puur] => 5
+                    [liik] => pildid/monkey.png
+                )
+
+        )
+
+    [7] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 9
+                    [nimi] => Maali
+                    [puur] => 7
+                    [liik] => pildid/cow.png
+                )
+
+            [1] => Array
+                (
+                    [id] => 10
+                    [nimi] => Kasper
+                    [puur] => 7
+                    [liik] => pildid/cow.png
+                )
+
+            [2] => Array
+                (
+                    [id] => 11
+                    [nimi] => Mingi
+                    [puur] => 7
+                    [liik] => pildid/cow.png
+                )
+
+        )
+
+)
