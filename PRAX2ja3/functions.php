@@ -19,17 +19,16 @@ function kuva_kysimused () {
     require_once('view/head.php');
 
     //display kysimused from $kysimused
-    echo "<form method='POST'>";
+    echo "<form method='POST' action='?mode=vastused'>";
     global $kysimused;
     $j2rjekorranumber = 1;
     foreach ($kysimused as &$kysimus) {
         //print_r($kysimus);
         echo "<h2>Küsimus nr.{$j2rjekorranumber}</h2>";
-        echo "<p>{$kysimus['Kysimus']}</p>";
-        foreach ($kysimus['Vastused'] as &$vastus)
-            {
-                echo "<p>{$vastus['variant']}</p>";
-            }
+        echo "<p>{$kysimus['kysimus']}</p>";
+        foreach ($kysimus['vastused'] as &$vastus) {
+            echo "<p><input type='radio' value='{$vastus['variant']}' name='{$kysimus['kysimus_id']}'>{$vastus['variant']}</input></p>";
+        }
 
         echo "";
         $j2rjekorranumber++;
@@ -74,7 +73,7 @@ function kuva_logisisse () {
         if (empty($errorid)) {
             $_SESSION['logitud']='true';
             $_SESSION['logimisteade']='Oled edukalt sisse loginud!';
-            header('Location: ?mode=galerii');
+            header('Location: ?mode=kysimused');
             exit(0);
         }
     }
@@ -100,22 +99,39 @@ function kuva_logiv2lja() {
     exit(0);
 };
 
-function kuva_vastused () {
+function kuva_vastused (){
     include('view/kysimused.php');
-    $id=0;
+    $id = 0;
     global $kysimused;
+    $_SESSION['valedvastused'] = 0;
+    $_SESSION['$oigedvastused'] = 0;
 
-    if ($_GET['id']== "" || empty($_GET['id']) || !is_numeric($_GET['id'])) {$id=0;}
-    else $id = $_GET['id'];
-    foreach ($kysimused as &$value) {
-        if ($id == $value['id']) {
-            $kysimus =  $value;
-        };
+    if (empty($_POST)) {
+        // $_SESSION['vastatud']='false';
+        header('Location: ?mode=kysimused');
+    } else {
+        foreach ($_POST as $v_id => $v) {
+            foreach ($kysimused as &$kysimus) {
+                if ($kysimus['kysimus_id'] == $v_id) {
+                    foreach ($kysimus['vastused'] as $kysimusevariant){
+                        if ($kysimusevariant['variant'] == $v)
+                            if ($kysimusevariant['value'] == 'true') {
+                                $_SESSION['$oigedvastused']++;
+                            } else {
+                                $_SESSION['valedvastused']++;
+                            }
+                    }
+                }
+            }
+        }
+        $tulemusi_kokku = $_SESSION['$oigedvastused'] + $_SESSION['valedvastused'];
+        require_once('view/head.php');
+
+        echo "<div id='vastus'><p>Sinu tulemus: Said  {$_SESSION['$oigedvastused']} õiget vastust {$tulemusi_kokku} vastusest</p></div>";
+
+        require_once('view/foot.html');
     };
-    require_once('view/head.php');
-    include ('view/vastused.php');
-    require_once('view/foot.html');
-};
+}
 
 function kuva_pealeht () {
     require_once('view/head.php');
