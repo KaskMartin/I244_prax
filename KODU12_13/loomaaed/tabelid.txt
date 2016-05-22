@@ -1,3 +1,14 @@
+ALTER TABLE  `markask_kylastajad` ADD  `roll` ENUM(  'admin',  'user' ) NOT NULL DEFAULT  'user';
+
+INSERT INTO `markask_kylastajad` (`id`, `nimi`, `puur`, `liik`) VALUES
+
+CREATE TABLE IF NOT EXISTS `markask_kylastajad` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `username` varchar(100) NOT NULL,
+  `passw` varchar(40) NOT NULL,
+  `visits` int(11) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `markask_loomaaed` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nimi` varchar(100) NOT NULL,
@@ -5,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `markask_loomaaed` (
   `liik` varchar(100) NOT NULL
 );
 
-
+4
 INSERT INTO `<sinu kasutajanimi/kood>_loomaaed` (`id`, `nimi`, `puur`, `liik`) VALUES
 (1, 'Olaf', 8, 'pildid/bear.png'),
 (2, 'Kassper', 2, 'pildid/cat.png'),
