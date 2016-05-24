@@ -17,6 +17,9 @@ switch($page){
 	case "loomad":
 		kuva_puurid();
 	break;
+	case "muuda":
+		muuda();
+		break;
 	case "logout":
 		logout();
 	break;

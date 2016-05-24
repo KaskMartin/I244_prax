@@ -1,9 +1,10 @@
+<?php print_r($loom) //testimiseks?>
 <form action="?page=muuda" method="POST" enctype="multipart/form-data">
-
+	<input type="number" style="display: none" name="id" value="<?php if (isset($loom['id'])) echo htmlspecialchars($loom['id']); ?>"/><br/>
 	<input type="text" name="nimi" placeholder="nimi" value="<?php if (isset($loom['nimi'])) echo htmlspecialchars($loom['nimi']); ?>"/><br/>
 	<input type="number" name="puur" placeholder="puur" value="<?php if (isset($loom['puur'])) echo htmlspecialchars($loom['puur']); ?>"/><br/>
 	Näopilt: <input type="file" name="liik"/><br/>
-	<input type="muuda" value="Lisa"/>
+	<input type="submit" value="Muuda"/>
 </form>
 <?php if (isset($errors)):?>
 		<?php foreach($errors as $error):?>
