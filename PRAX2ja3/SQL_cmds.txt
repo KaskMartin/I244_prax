@@ -1,0 +1,52 @@
+CREATE TABLE IF NOT EXISTS `markask_kysimused` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kysimustik_id` int(11) NOT NULL,
+  `kysimus` varchar(1000) NOT NULL,
+  `mitu_valikut` tinyint(1) NOT NULL DEFAULT '0',
+  `max_punktid` decimal(9,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `markask_vastused` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kysimustik_id` int(11) NOT NULL,
+  `vastuse_variant` varchar(1000) NOT NULL,
+  `t6ev22rtus` tinyint(1) NOT NULL,
+  `punkte` decimal(9,2) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE IF NOT EXISTS `markask_kysimustikud` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kysimused_id` int(11) NOT NULL,
+  `pealkiri` varchar(1000) NOT NULL,
+  `punkte_kokku` decimal(9,2) DEFAULT NULL,
+  `l2vend` decimal(9,2) DEFAULT NULL,
+  `ajalimiit` time DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE IF NOT EXISTS `markask_tulemused` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kasutajad_id` int(11) NOT NULL,
+  `kysimustikud_id` int(11) NOT NULL,
+  `millal_tehtud` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `kaua_l2ks` time DEFAULT NULL,
+  `punkte` decimal(9,2) DEFAULT NULL,
+  `l2bitud` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+)
+
+hiljem:
+
+CREATE TABLE markask_kasutajad (id integer PRIMARY KEY auto_increment, nimi varchar(50) UNIQUE, vanus integer, liik varchar(50), puur integer);
+
+
+
+INSERT INTO  `10152870_loomaaed` (  `id` ,  `nimi` ,  `vanus` ,  `liik` ,  `puur` )  VALUES
+ ('1',  'Kiisuke',  '3',  'L6vi',  '1'),
+ ('2','Leonard', '5', 'L6vi', '1'),
+ ('3','Toiduke', '1', 'J2nes', '1'),
+ ('4','Lucky', '2', 'J2nes', '2'),
+ ('5','Strangu', '8', 'Python', '3'),
+ ('6','NotSoLucky', '1', 'J2nes', '3');
