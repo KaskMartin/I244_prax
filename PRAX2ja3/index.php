@@ -1,6 +1,6 @@
 <?php
 require_once('functions.php');
-alusta_sessioon();
+connect_db();
 session_start();
 
 $mode = 'pealeht';

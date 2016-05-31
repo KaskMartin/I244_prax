@@ -23,6 +23,7 @@ h1 {
 #kasutajainfo {
     float: right;
     color: black;
+    margin: 5px;
 }
 
 html, body, #container { height: 100%; }

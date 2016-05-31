@@ -30,12 +30,12 @@ CREATE TABLE IF NOT EXISTS `markask_tulemused` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kasutajad_id` int(11) NOT NULL,
   `kysimustikud_id` int(11) NOT NULL,
-  `millal_tehtud` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `millal_esitatud` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `kaua_l2ks` time DEFAULT NULL,
   `punkte` decimal(9,2) DEFAULT NULL,
   `l2bitud` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-);
+)
 
 CREATE TABLE markask_kasutajad (
 `id` integer PRIMARY KEY auto_increment,
@@ -44,4 +44,63 @@ CREATE TABLE markask_kasutajad (
 `password` varchar(50);
 
 INSERT INTO `test`.`markask_kasutajad` (`id`, `roll`, `user`, `password`) VALUES (NULL, 'user', 'admin1', SHA1('admin1')), (NULL, 'user', 'kasutaja1', SHA1('kasutaja1'));
+
+
+INSERT INTO `test`.`markask_kysimused` (`id`, `kysimustik_id`, `kysimus`, `mitu_valikut`, `max_punktid`) VALUES ('1', '1', 'Mitu Sõrme on inimesel?', '0', '10'), ('2', '1', 'Mitu varvast on lätlasel?', '0', '10'), ('3', '1', 'Mis värvi on armastus?', '0', '2'), ('4', '1', 'Can JetFuel melt steal beams?', '0', '7');
+INSERT INTO `test`.`markask_kysimused` (`id`, `kysimustik_id`, `kysimus`, `mitu_valikut`, `max_punktid`) VALUES (NULL, '2', '2 + 2 =', '0', '1'), (NULL, '2', '3 % 2 =', '0', '2'), (NULL, '2', '5! = ', '0', '3'), (NULL, '2', '(1+2)/3 < 1+2/3', '0', '3'), (NULL, '2', '(((2*2*2*2*2)-56)+(6-24))*0', '0', '4');
+
+
+
+id	kysimustik_id	kysimus	mitu_valikut	max_punktid
+1	1	Mitu Sõrme on inimesel?	0	10.00
+2	1	Mitu varvast on lätlasel?	0	10.00
+3	1	Mis värvi on armastus?	0	2.00
+4	1	Can JetFuel melt steal beams?	0	7.00
+5	2	2 + 2 =	0	1.00
+6	2	3 % 2 =	0	2.00
+7	2	5! =	0	3.00
+8	2	(1+2)/3 < 1+2/3	0	3.00
+9	2	(((2*2*2*2*2)-56)+(6-24))*0	0	4.00
+
+INSERT INTO `test`.`markask_vastused` (`id`, `kysimuse_id`, `vastuse_variant`, `t6ev22rtus`, `punkte`) VALUES (NULL, '1', '5', '0', '-5'), (NULL, '1', '10', '1', '10'), (NULL, '1', '12', '0', '-2'), (NULL, '2', '5', '0', '-5'), (NULL, '2', '10', '0', '-5'), (NULL, '2', '12', '1', '10'), (NULL, '3', 'Roosa', '0', '1'), (NULL, '3', 'Punane', '0', '1'), (NULL, '3', 'Mitte ükski neist', '1', '2'), (NULL, '3', 'Must', '0', '0'), (NULL, '4', 'True', '0', '0'), (NULL, '4', 'False', '1', '7'), (NULL, '5', '4', '1', '1'), (NULL, '5', '2', '0', '0'), (NULL, '5', '1', '0', '0'), (NULL, '6', '1', '1', '2'), (NULL, '6', '0', '0', '0'), (NULL, '6', '2', '0', '0'), (NULL, '7', '5?', '0', '0'), (NULL, '7', '120', '1', '3'), (NULL, '7', '25', '0', '0'), (NULL, '8', 'True', '1', '3'), (NULL, '8', 'False', '0', '0'), (NULL, '9', '0', '1', '4'), (NULL, '9', '-24', '0', '0'), (NULL, '9', '-42', '0', '0'), (NULL, '9', '6', '0', '0'), (NULL, '9', '32', '0', '0'), (NULL, '9', '-18', '0', '0');
+
+id	kysimuse_id	vastuse_variant	t6ev22rtus	punkte
+1	1	5	0	-5.00
+2	1	10	1	10.00
+3	1	12	0	-2.00
+4	2	5	0	-5.00
+5	2	10	0	-5.00
+6	2	12	1	10.00
+7	3	Roosa	0	1.00
+8	3	Punane	0	1.00
+9	3	Mitte ükski neist	1	2.00
+10	3	Must	0	0.00
+11	4	True	0	0.00
+12	4	False	1	7.00
+13	5	4	1	1.00
+14	5	2	0	0.00
+15	5	1	0	0.00
+16	6	1	1	2.00
+17	6	0	0	0.00
+18	6	2	0	0.00
+19	7	5?	0	0.00
+20	7	120	1	3.00
+21	7	25	0	0.00
+22	8	True	1	3.00
+23	8	False	0	0.00
+24	9	0	1	4.00
+25	9	-24	0	0.00
+26	9	-42	0	0.00
+27	9	6	0	0.00
+28	9	32	0	0.00
+29	9	-18	0	0.00
+
+INSERT INTO `test`.`markask_kysimustikud` (`id`, `pealkiri`, `punkte_kokku`, `l2vend`, `ajalimiit`) VALUES ('1', 'Varia', '29', '22', TIME('00:05:00')), ('2', 'Matemaatikat', '13', '10', TIME('00:10:00'));
+
+
+id	pealkiri	    punkte_kokku	l2vend	ajalimiit
+1	Varia	        29.00	        22.00	00:05:00
+2	Matemaatikat	13.00	        10.00	00:10:00
+
+INSERT INTO `test`.`markask_tulemused` (`id`, `kasutajad_id`, `kysimustikud_id`, `millal_esitatud`, `kaua_l2ks`, `punkte`, `l2bitud`) VALUES (NULL, '2', '1', CURRENT_TIMESTAMP, TIME('00:08:00'), '10', '0'), (NULL, '2', '1', CURRENT_TIMESTAMP, TIME('00:09:00'), '3', '0'), (NULL, '2', '2', CURRENT_TIMESTAMP, TIME('00:03:00'), '2', '0'), (NULL, '2', '2', CURRENT_TIMESTAMP, TIME('00:03:00'), '3', '0');
 

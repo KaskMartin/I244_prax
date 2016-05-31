@@ -1,21 +1,28 @@
-			<form action="?mode=registreeru" method="post" id="f1">
-				<table>
-					<tr>
-						<td>Kasutajanimi</td><td><input type="text" name="Kasutajanimi"></td>
-					</tr>
+<form action="?mode=registreeru" method="POST" id="f1">
+	<table>
+		<tr>
+			<td>Kasutajanimi</td><td><input type="text" name="newuser" value="<?php
+						 if (!empty($_SESSION['pooleliuser'])) {echo htmlspecialchars($_SESSION['pooleliuser']);unset($_SESSION['pooleliuser']);}
+						 ?>"></td>
+		</tr>
 
-					<tr>
-						<td>Parool</td><td><input type="password" name="Parool"></td>
-					</tr>
+		<tr>
+			<td>Parool</td><td><input type="password" name="passwordx1"></td>
+		</tr>
 
-					<tr>
-						<td>Kinnita parool</td><td><input type="password" name="Paroolx2"></td>
-					</tr>
+		<tr>
+			<td>Kinnita parool</td><td><input type="password" name="passwordx2"></td>
+		</tr>
 
-					<tr>
-						<td colspan="2"><button type="submit">Sisesta!</button></td>
-					</tr>
-					<script id="ajutine_kustuta kindlasti">alert("Regatud, vist...")</script>
+		<tr>
+			<td colspan="2"><button type="submit">Sisesta!</button></td>
+		</tr>
 
-				</table>
-			</form>
+	</table>
+</form>
+<br>
+<?php if (isset($errors)):?>
+	<?php foreach($errors as $error):?>
+		<div style="color:red;"><?php echo htmlspecialchars($error); ?></div><br>
+	<?php endforeach;?>
+<?php endif;?>

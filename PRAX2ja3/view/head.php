@@ -19,11 +19,7 @@
         </li>
 
         <li>
-            <a href="?mode=kysimused">Küsimused</a>
-        </li>
-
-        <li>
-            <a <?php if (on_logitud() ) {
+            <a <?php if (!empty($_SESSION["user"])) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
             ?> href="?mode=logisisse">Logi Sisse</a>
@@ -31,28 +27,35 @@
 
 
         <li>
-            <a <?php if (on_logitud() ) {
+            <a <?php if (!empty($_SESSION["user"])) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
             ?> href="?mode=registreeru">Registreeru</a>
         </li>
 
         <li>
-            <a <?php if (!on_logitud() ) {
+            <a <?php if (empty($_SESSION["user"])) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
             ?> href="?mode=testid">Testid</a>
         </li>
 
         <li>
-            <a <?php if (!on_logitud() ) {
+            <a <?php if (empty($_SESSION["user"])) {
+                echo "style = 'display: none'";}
+            else {echo "style = 'display: inherit'";}
+            ?> href="?mode=kysimused">Küsimused</a>
+        </li>
+
+        <li>
+            <a <?php if (empty($_SESSION["user"])) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
                ?> href="?mode=logiv2lja">Logi välja</a>
         </li>
 
         <?php if (!empty($_SESSION["user"])) {
-        echo "<li style='float: right' id='kasutajainfo'>kasutaja: {$_SESSION['user']} <br>";
+        echo "<li id='kasutajainfo'>kasutaja: {$_SESSION['user']} <br>";
             echo "roll: {$_SESSION['roll']} </li>";
         }
         ?>

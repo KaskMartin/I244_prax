@@ -30,11 +30,54 @@ function lopeta_sessioon(){
     }
     session_destroy();
 }
+
+
+/**
+ *
+ */
 function kuva_testid () {
-    /* kuva logimise teade, kui seda on*/
-    require_once('view/head.php');
-    require_once('view/testid.html');
-    require_once('view/foot.html');
+    if (!empty($_SESSION["roll"])) {
+        global $connection;
+
+        $query = "SELECT * FROM markask_kysimustikud";
+        $testid =  mysqli_fetch_assoc(mysqli_query($connection, $query));
+
+        if (($_SESSION["roll"])=="user") {
+            //otsime praeguse kasutaja user_id üles
+            $query = "SELECT id FROM markask_kasutajad WHERE user='{$_SESSION["user"]}'";
+            $user_id =  mysqli_fetch_assoc(mysqli_query($connection, $query));
+
+            lae_tulemused();
+            foreach($testid as $test) {
+                $query = "SELECT * FROM markask_tulemused WHERE kasutajad_id='{$user_id}'";
+                $active_user = mysqli_fetch_assoc(mysqli_query($connection, $query));
+                if ($test['kasutajad_id'] == $active_user) {
+                    /////////siia kuvamis meetod!!!
+                    // for (each result given) {
+                    //prindi tabel}
+                }
+            }
+
+
+
+        } elseif (($_SESSION["roll"])=="admin") {
+            lae_testid();
+        }
+        require_once('view/head.php');
+        require_once('view/testid.php');
+        require_once('view/foot.html');
+
+    } else {
+        header("Location: ?mode=logisisse");
+    };
+}
+
+function lae_testid() {
+    return;
+}
+
+function lae_tulemused() {
+    return;
 }
 
 function kuva_kysimused () {
@@ -75,9 +118,6 @@ function kuva_laekysimus () {
     require_once('view/foot.html');
 };
 
-/**
- *
- */
 function kuva_logisisse () {
 
     global $connection;
@@ -101,20 +141,28 @@ function kuva_logisisse () {
 
                 if (empty($_POST["password"]))
                     $errors[] = "Parool on sisestamata!";
-
-                header("Location: ?mode=logisisse");
             }
             //Kui tunnus ja salasõna on olemas, siis kontrollime nende vastavust andmebaasile
             else {
                 $username = mysqli_real_escape_string($connection, $_POST["user"]);
-                $passw = mysqli_real_escape_string($connection, $_POST["password"]);
+                $passw = sha1(mysqli_real_escape_string($connection, $_POST["password"]));
+
+                //testimiseks, peita pärast
+                //print_r($username);
+                //print_r($passw);
+
+                // admin sha 6c7ca345f63f835cb353ff15bd6c5e052ec08e7a
+                // kasutaja1 sha ea317b340f2fcf3f3adbed1d60fc7047261cfc59
 
                 //otsime kasutajat andmebaasist, limiteerime tulemuse 1 vasteni, sest kasutajad on unikaalsed
-                $query = "SELECT * FROM markask_kasutajad WHERE user='{$username}' AND password=sha1('{$passw}') LIMIT 1";
+                $query = "SELECT * FROM markask_kasutajad WHERE user='{$username}' AND password='{$passw}' LIMIT 1";
                 $result = mysqli_query($connection, $query);
 
-                if (mysqli_num_rows($result)) {
+                //kui kasutaja leidub siis lisame sessiooni tema info
+                if (mysqli_num_rows($result) > 0) {
                     $roll = mysqli_fetch_assoc(mysqli_query($connection, $query))['roll'];
+                    print_r($roll);
+                    alusta_sessioon();
                     $_SESSION["user"] = $username;
                     $_SESSION["roll"] = $roll;
 
@@ -130,7 +178,6 @@ function kuva_logisisse () {
                  * et mitte pahalastele liialt infot anda, ei täpsusta kumb on valesti */
                 else {
                     $errors[] = "Kasutajanimi või salasõna on vale!";
-                    header("Location: ?mode=logisisse");
                 }
             }
 
@@ -144,9 +191,78 @@ function kuva_logisisse () {
 };
 
 function kuva_registreeru () {
-    require_once('view/head.php');
-    require_once('view/registreeru.html');
-    require_once('view/foot.html');
+    unset($_SESSION['pooleliuser']);
+    global $connection;
+    $errors = array();
+    /*Kui kasutaja on juba sessioonis olemas, siis st. et on kasutja sisseloginud ja kasutanud linki
+    või sirvija back funktsiooni - seega pole tal ka uut kasutaja tunnust vaja ja suuname ta otse testide leheküljele
+    */
+    if (!empty($_SESSION["user"])) {
+        header("Location: ?mode=testid");
+
+        //Kui kasutajat ei ole sessioonis alustame uue kasutaja registreerimis sessiooniga
+    } else {
+
+        //Kontrollime, kas kasutja üldse andmeid sisestas sisselogimise blanketil
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            //Kui jah siis kontrollime kas tunnus ja parool on olemas, kui midagi on puudu, siis suuname uuesti sisselogima
+            if (empty($_POST["newuser"]) || empty($_POST["passwordx1"]) || empty($_POST["passwordx2"])) {
+
+                //kui kasutajanimi on sisestamata lisame veateate
+                if (empty($_POST["newuser"]))
+                    $errors[] = "Kasutajanimi on sisestamata!";
+
+                //Kui salasõna on sisestamata, siis lisame veateate, kui aga samas kasutja on olemas salvestame selle, et
+                //hiljem sellega kasutaja elu veits lihtsamaks teha
+                if (empty($_POST["passwordx1"]) || empty($_POST["passwordx2"]))
+                    $errors[] = "Parool on sisestamata!";
+                    if (!empty($_POST["newuser"])) {
+                        $_SESSION['pooleliuser']=htmlspecialchars($_POST["newuser"]);}
+            //kui paroolid ja kasutaja on olemas vaatame, et parooli klapiks, kui ei siis vaatame kas kasutja on olemas
+                // ning salvestame selle, et hiljem sellega kasutaja elu veits lihtsamaks teha
+            } else if ($_POST["passwordx1"] != $_POST["passwordx2"]) {
+                $errors[] = "Paroolid ei klapi!";
+                if (!empty($_POST["newuser"])) {
+                    $_SESSION['pooleliuser']=htmlspecialchars($_POST["newuser"]);}
+            } //Kui tunnus ja salasõna on olemas, siis kontrollime nende vastavust andmebaasile
+            else {
+                $newusername = mysqli_real_escape_string($connection, $_POST["newuser"]);
+                $newpassw = sha1(mysqli_real_escape_string($connection, $_POST["passwordx1"]));
+
+                //otsime kas sama nimega kasutaja on juba andmebaasis
+                $query = "SELECT * FROM markask_kasutajad WHERE user='{$newusername}' LIMIT 1";
+                $result = mysqli_query($connection, $query);
+
+                //kui kasutajat ei ole siis lisame uue kasutaja
+                if (mysqli_num_rows($result) <= 0) {
+
+                    $sql = "INSERT INTO markask_kasutajad (user, password) VALUES ( '{$newusername}', '{$newpassw}')";
+
+                    if ($connection->query($sql) === TRUE) {
+                        $_SESSION['newuser']=$newusername;
+                        $_SESSION['regamisteade'] = "Uus kasutaja lisatud! Palun logige oma tunnusega sisse.";
+                        header("Location: ?mode=logisisse");
+                    } else {
+                        $errors[] = "Vabandame, kuid andmebaasiga ühendumises tekkis probleem, palun proovi uuesti!";
+                    }
+                    //vabastame päringu, kuna kasutaja päringut enam vaja ei lähe
+                    mysqli_free_result($result);
+
+                    //Kui tunnus leidub ja salasõna on õige logime kasutaja sisse
+
+                } /* Kui kasutaja on juba olemas, siis lisame veateate ja laseme lõppu minna (uuessti registreerimis vormile) */
+                else {
+                    $errors[] = "Kasutajanimi on juba kasutusel!";
+                }
+            }
+
+        }
+        //kui kasutaja andmeid ei sisestanud, või läks midagi valesti siis anname talle välja kus ta saab seda (uuesti) teha
+        require_once('view/head.php');
+        require_once('view/registreeru.html');
+        require_once('view/foot.html');
+    }
 };
 
 function kuva_logiv2lja() {
@@ -195,12 +311,4 @@ function kuva_pealeht () {
     require_once('view/foot.html');
 };
 
-function on_logitud() {
-    if (!empty($_SESSION['logitud'])) {
-        if ($_SESSION['logitud'] == 'true') {
-            return true;
-        }
-    }
-    return false;
-}
 ?>
