@@ -1,20 +1,26 @@
-	<form action="?mode=logisisse" method="post" id="f1">
-			<table>
-					<tr>
-						<td>Kasutajanimi</td><td><input type="text" name="Kasutajanimi" value="<?php
-						 if (!empty($_POST) && !empty($_POST['Kasutajanimi'])) {echo htmlspecialchars($_POST['Kasutajanimi']);}
+<form action="?mode=logisisse" method="post" id="f1">
+	<table>
+		<tr>
+			<td>Kasutajanimi</td><td><input type="text" name="user" value="<?php
+						 if (!empty($_POST) && !empty($_POST['user'])) {echo htmlspecialchars($_POST['user']);}
 						 ?>"></td>
-					</tr>
+		</tr>
 
-					<tr>
-						<td>Parool</td><td><input type="password" name="Parool"></td>
-					</tr>
+		<tr>
+			<td>Parool</td><td><input type="password" name="password"></td>
+		</tr>
 
-					<tr>
-						<td colspan="2"><button type="submit">Sisesta!</button></td>
-					</tr>
+		<tr>
+			<td colspan="2"><button type="submit">Sisesta!</button></td>
+		</tr>
 
-					<tr><td colspan="2"><a href="?mode=registreeru">Registreeru</a></td></tr>
-
-				</table>
-			</form>
+		<tr><td colspan="2"><button type="button" onclick="location.href='?mode=registreeru'">
+			Registreeru</button>
+	</table>
+</form>
+<br>
+<?php if (isset($errors)):?>
+	<?php foreach($errors as $error):?>
+		<div style="color:red;"><?php echo htmlspecialchars($error); ?></div><br>
+	<?php endforeach;?>
+<?php endif;?>

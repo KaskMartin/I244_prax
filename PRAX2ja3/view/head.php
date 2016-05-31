@@ -9,8 +9,10 @@
 </head>
 
 <body>
-<div class="lehesisu">
+<div id="container">
+    <div id="content">
     <h1 class="Pealkiri">Questionaator</h1>
+
     <ul class="menu">
         <li>
             <a href="?mode=pealeht">Pealeht</a>
@@ -39,7 +41,7 @@
             <a <?php if (!on_logitud() ) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
-            ?> href="?mode=laefail">Lae Faile Üles</a>
+            ?> href="?mode=testid">Testid</a>
         </li>
 
         <li>
@@ -48,12 +50,10 @@
             else {echo "style = 'display: inherit'";}
                ?> href="?mode=logiv2lja">Logi välja</a>
         </li>
+
+        <?php if (!empty($_SESSION["user"])) {
+        echo "<li style='float: right' id='kasutajainfo'>kasutaja: {$_SESSION['user']} <br>";
+            echo "roll: {$_SESSION['roll']} </li>";
+        }
+        ?>
     </ul>
-
-    <div id="teade"><?php
-    if (!empty($_SESSION['logimisteade'])) {
-        echo "<div id='teade' style='font-weight: bolder'>{$_SESSION['logimisteade']}</div>>";
-        unset($_SESSION['logimisteade']);
-    }
-
-    ?></div>

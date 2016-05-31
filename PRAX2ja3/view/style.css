@@ -1,5 +1,6 @@
 body {
     background-color: lightblue;
+
 }
 
 #vastus {
@@ -9,11 +10,6 @@ body {
     text-align: center;
 }
 
-.kiisuke {
-    cursor: default;
-    color: #9affeb;
-    text-decoration: none;
-}
 
 h1 {
     color: navy;
@@ -23,7 +19,18 @@ h1 {
 .Pealkiri {
     color: blue;
 }
-.lehesisu {
+
+#kasutajainfo {
+    float: right;
+    color: black;
+}
+
+html, body, #container { height: 100%; }
+
+body > #container { height: auto; min-height: 100%; }
+
+#container {
+    position: relative;
     background-color: #9affeb;
     text-align: justify;
     max-width: 1000px;
@@ -31,18 +38,62 @@ h1 {
     margin: auto;
 }
 
+body {
+    margin: 0 0 35px;
+}
+
+button {
+    color: #000;
+    text-align: center;
+    width: 150px;
+    padding: 8px 8px;
+    background-color: #f1f1f1;
+}
+
+#content {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+footer {
+    margin: 5px;
+    clear: both;
+    position: absolute;
+    left:0;
+    right: 0;
+    z-index: 10;
+    height: 35px;
+    max-width: 1000px;
+    min-width: 600px;
+    vertical-align:middle;
+}
+
 .menu {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 200px;
+    overflow: hidden;
     background-color: #f1f1f1;
+}
+
+.menu li {
+    float: left;
 }
 
 .menu li a {
     display: block;
     color: #000;
-    padding: 8px 0 8px 16px;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* eemaldame linkide allajoonimise*/
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
     text-decoration: none;
 }
 
@@ -61,6 +112,9 @@ image {
 .validaator {
     border: none;
     float: none;
+    border:0;
+    width:88px;
+    height:31px;
     /* float-wrap: none;*/
 }
 

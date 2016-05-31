@@ -1,16 +1,20 @@
 <?php
-include('functions.php');
+require_once('functions.php');
 alusta_sessioon();
+session_start();
 
 $mode = 'pealeht';
 
 if (!empty($_GET)) {
     if ($_GET["mode"] != "") {
-        $mode = $_GET["mode"];
+        $mode = htmlspecialchars($_GET["mode"]);
     }
 };
 
 switch ($mode) {
+    case 'testid':
+        kuva_testid();
+        break;
     case 'kysimused':
         kuva_kysimused();
         break;
