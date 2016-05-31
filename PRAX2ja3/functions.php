@@ -31,39 +31,84 @@ function lopeta_sessioon(){
     session_destroy();
 }
 
+/*
+ * Modified from http://stackoverflow.com/questions/15251095/display-data-from-sql-database-into-php-html-table
+ * by Axel Arnold Bangert - Herzogenrath 2016
+ */
+function display_data($data) {
+    $output = "<table class='db-table'>";
+    foreach($data as $key => $var) {
+        //$output .= '<tr>';
+        if($key===0) {
+            $output .= '<tr>';
+            foreach($var as $col => $val) {
+                $output .= "<td>" . $col . '</td>';
+            }
+            $output .= '</tr>';
+            foreach($var as $col => $val) {
+                $output .= '<td>' . $val . '</td>';
+            }
+            $output .= '</tr>';
+        }
+        else {
+            $output .= '<tr>';
+            foreach($var as $col => $val) {
+                $output .= '<td>' . $val . '</td>';
+            }
+            $output .= '</tr>';
+        }
+    }
+    $output .= '</table>';
+    echo $output;
+}
 
 /**
  *
  */
 function kuva_testid () {
     if (!empty($_SESSION["roll"])) {
+        require_once('view/head.php');
         global $connection;
 
         $query = "SELECT * FROM markask_kysimustikud";
-        $testid =  mysqli_fetch_assoc(mysqli_query($connection, $query));
+        $result=  mysqli_query($connection, $query);
+        $kysimustikud=array();
+        while($row = mysqli_fetch_assoc($result)) {
+            $kysimustikud[] = $row;
+        }
 
+
+        //kui tegu on tavakasutajaga, hakkame tema tulemusi kuvama
         if (($_SESSION["roll"])=="user") {
             //otsime praeguse kasutaja user_id üles
-            $query = "SELECT id FROM markask_kasutajad WHERE user='{$_SESSION["user"]}'";
-            $user_id =  mysqli_fetch_assoc(mysqli_query($connection, $query));
+            $query = "SELECT * FROM markask_kasutajad WHERE user='{$_SESSION["user"]}' LIMIT 1";
+            $user_id =  mysqli_fetch_assoc(mysqli_query($connection, $query))['id'];
 
-            lae_tulemused();
-            foreach($testid as $test) {
-                $query = "SELECT * FROM markask_tulemused WHERE kasutajad_id='{$user_id}'";
-                $active_user = mysqli_fetch_assoc(mysqli_query($connection, $query));
-                if ($test['kasutajad_id'] == $active_user) {
-                    /////////siia kuvamis meetod!!!
-                    // for (each result given) {
-                    //prindi tabel}
+            //käime iga küsimustiku läbi
+            foreach($kysimustikud as $kysimustik) {
+                //prindime välja küsimustiku pealkirja
+                echo "<h3>{$kysimustik["pealkiri"]}</h3>";
+
+                //Otsime välja kasutaja tulemused, mis selle küsimustiku kohta on olemas
+                $query = "SELECT id as '#', millal_esitatud as 'Esitamise aeg', kaua_l2ks as 'Kulunud aeg', l2bitud as 'Läbitud' FROM markask_tulemused WHERE kasutajad_id='{$user_id}' AND kysimustikud_id='{$kysimustik['id']}'";
+                $result = mysqli_query($connection, $query);
+                $tulemused=array();
+                while($row = mysqli_fetch_assoc($result)) {
+                    $tulemused[] = $row;
                 }
+
+                //prindime tulemused välja
+                        echo "<p>";
+                            display_data($tulemused);
+                        echo "</p><br>";
             }
 
 
 
         } elseif (($_SESSION["roll"])=="admin") {
-            lae_testid();
+
         }
-        require_once('view/head.php');
+
         require_once('view/testid.php');
         require_once('view/foot.html');
 
@@ -72,13 +117,6 @@ function kuva_testid () {
     };
 }
 
-function lae_testid() {
-    return;
-}
-
-function lae_tulemused() {
-    return;
-}
 
 function kuva_kysimused () {
     require_once('view/kysimused.php');
