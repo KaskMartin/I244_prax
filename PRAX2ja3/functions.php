@@ -1,5 +1,4 @@
 <?php
-$_SESSION['logitud']="";
 
 function connect_db()
 {
@@ -32,6 +31,7 @@ function lopeta_sessioon(){
 }
 
 /*
+ * Funktsioon tabeli printimiseks array(array()) tyypi muutujast
  * Modified from http://stackoverflow.com/questions/15251095/display-data-from-sql-database-into-php-html-table
  * by Axel Arnold Bangert - Herzogenrath 2016
  */
@@ -40,7 +40,7 @@ function display_data($data) {
     foreach($data as $key => $var) {
         //$output .= '<tr>';
         if($key===0) {
-            $output .= '<tr>';
+            $output .= '<tr class="dp-heading">';
             foreach($var as $col => $val) {
                 $output .= "<td>" . $col . '</td>';
             }
@@ -62,99 +62,18 @@ function display_data($data) {
     echo $output;
 }
 
-/**
- *
+/*
+ * võtab sisenditena $connectioni ja SQL päringu ning tagastab Array(array()) formaadis tulemused
  */
-function kuva_testid () {
-    if (!empty($_SESSION["roll"])) {
-        require_once('view/head.php');
-        global $connection;
+function get_data ($sql, $con) {
+    $result = mysqli_query($con, $sql);
+    $tulemused=array();
 
-        $query = "SELECT * FROM markask_kysimustikud";
-        $result=  mysqli_query($connection, $query);
-        $kysimustikud=array();
-        while($row = mysqli_fetch_assoc($result)) {
-            $kysimustikud[] = $row;
-        }
-
-
-        //kui tegu on tavakasutajaga, hakkame tema tulemusi kuvama
-        if (($_SESSION["roll"])=="user") {
-            //otsime praeguse kasutaja user_id üles
-            $query = "SELECT * FROM markask_kasutajad WHERE user='{$_SESSION["user"]}' LIMIT 1";
-            $user_id =  mysqli_fetch_assoc(mysqli_query($connection, $query))['id'];
-
-            //käime iga küsimustiku läbi
-            foreach($kysimustikud as $kysimustik) {
-                //prindime välja küsimustiku pealkirja
-                echo "<h3>{$kysimustik["pealkiri"]}</h3>";
-
-                //Otsime välja kasutaja tulemused, mis selle küsimustiku kohta on olemas
-                $query = "SELECT id as '#', millal_esitatud as 'Esitamise aeg', kaua_l2ks as 'Kulunud aeg', l2bitud as 'Läbitud' FROM markask_tulemused WHERE kasutajad_id='{$user_id}' AND kysimustikud_id='{$kysimustik['id']}'";
-                $result = mysqli_query($connection, $query);
-                $tulemused=array();
-                while($row = mysqli_fetch_assoc($result)) {
-                    $tulemused[] = $row;
-                }
-
-                //prindime tulemused välja
-                        echo "<p>";
-                            display_data($tulemused);
-                        echo "</p><br>";
-            }
-
-
-
-        } elseif (($_SESSION["roll"])=="admin") {
-
-        }
-
-        require_once('view/testid.php');
-        require_once('view/foot.html');
-
-    } else {
-        header("Location: ?mode=logisisse");
+    while($row = mysqli_fetch_assoc($result)) {
+        $tulemused[] = $row;
     };
+    return $tulemused;
 }
-
-
-function kuva_kysimused () {
-    require_once('view/kysimused.php');
-    require_once('view/head.php');
-
-    //display kysimused from $kysimused
-    echo "<form method='POST' action='?mode=vastused'>";
-    global $kysimused;
-    $j2rjekorranumber = 1;
-    foreach ($kysimused as &$kysimus) {
-        //print_r($kysimus);
-        echo "<h2>Küsimus nr.{$j2rjekorranumber}</h2>";
-        echo "<p>{$kysimus['kysimus']}</p>";
-        foreach ($kysimus['vastused'] as &$vastus) {
-            echo "<p><input type='radio' value='{$vastus['variant']}' name='{$kysimus['kysimus_id']}' id='{$kysimus['kysimus_id']}{$vastus['variant']}'><label for='{$kysimus['kysimus_id']}{$vastus['variant']}'>{$vastus['variant']}</label></p>";
-        }
-
-        echo "";
-        $j2rjekorranumber++;
-    };
-    echo "<button type=\"submit\">Sisesta!</button></form>";
-
-    require_once('view/foot.html');
-};
-
-function kuva_laekysimus () {
-    /*Siia meetod kysimuste üles laadimiseks*/
-
-    /*if (empty($_SESSION['logitud']) || $_SESSION['logitud'] != 'true' ) {
-        $_SESSION['logimisteade']="Vabandame, kuid pilte lisada saavad ainult registreerunud kasutajad.";
-        header('Location: ?mode=galerii');
-        exit(0);
-    }*/
-
-    require_once('view/head.php');
-    require_once('view/laekysimus.html');
-    require_once('view/foot.html');
-};
 
 function kuva_logisisse () {
 
@@ -255,9 +174,9 @@ function kuva_registreeru () {
                 //hiljem sellega kasutaja elu veits lihtsamaks teha
                 if (empty($_POST["passwordx1"]) || empty($_POST["passwordx2"]))
                     $errors[] = "Parool on sisestamata!";
-                    if (!empty($_POST["newuser"])) {
-                        $_SESSION['pooleliuser']=htmlspecialchars($_POST["newuser"]);}
-            //kui paroolid ja kasutaja on olemas vaatame, et parooli klapiks, kui ei siis vaatame kas kasutja on olemas
+                if (!empty($_POST["newuser"])) {
+                    $_SESSION['pooleliuser']=htmlspecialchars($_POST["newuser"]);}
+                //kui paroolid ja kasutaja on olemas vaatame, et parooli klapiks, kui ei siis vaatame kas kasutja on olemas
                 // ning salvestame selle, et hiljem sellega kasutaja elu veits lihtsamaks teha
             } else if ($_POST["passwordx1"] != $_POST["passwordx2"]) {
                 $errors[] = "Paroolid ei klapi!";
@@ -289,7 +208,7 @@ function kuva_registreeru () {
 
                     //Kui tunnus leidub ja salasõna on õige logime kasutaja sisse
 
-                } /* Kui kasutaja on juba olemas, siis lisame veateate ja laseme lõppu minna (uuessti registreerimis vormile) */
+                } /* Kui kasutaja on juba olemas, siis lisame veateate ja laseme lõppu minna (uuesti registreerimis vormile) */
                 else {
                     $errors[] = "Kasutajanimi on juba kasutusel!";
                 }
@@ -309,38 +228,169 @@ function kuva_logiv2lja() {
     exit(0);
 };
 
-function kuva_vastused (){
-    include('view/kysimused.php');
-    $id = 0;
-    global $kysimused;
-    $_SESSION['valedvastused'] = 0;
-    $_SESSION['$oigedvastused'] = 0;
-
-    if (empty($_POST)) {
-        // $_SESSION['vastatud']='false';
-        header('Location: ?mode=kysimused');
+/**
+ *
+ */
+function kuva_testid () {
+    if (empty($_SESSION["roll"]) || empty($_SESSION["user"])) {
+        header("Location: ?mode=logisisse");
     } else {
-        foreach ($_POST as $v_id => $v) {
-            foreach ($kysimused as &$kysimus) {
-                if ($kysimus['kysimus_id'] == $v_id) {
-                    foreach ($kysimus['vastused'] as $kysimusevariant){
-                        if ($kysimusevariant['variant'] == $v)
-                            if ($kysimusevariant['value'] == 'true') {
-                                $_SESSION['$oigedvastused']++;
-                            } else {
-                                $_SESSION['valedvastused']++;
-                            }
+        require_once('view/head.php');
+        global $connection;
+
+        $sql = "SELECT * FROM markask_kysimustikud";
+        $kysimustikud = get_data($sql, $connection);
+
+        //kui tegu on tavakasutajaga, hakkame tema tulemusi kuvama
+        if (($_SESSION["roll"])=="user") {
+            //otsime praeguse kasutaja user_id üles
+            $sql = "SELECT * FROM markask_kasutajad WHERE user='{$_SESSION["user"]}' LIMIT 1";
+            $user_id =  mysqli_fetch_assoc(mysqli_query($connection, $sql))['id'];
+
+            //käime iga küsimustiku läbi
+            foreach($kysimustikud as $kysimustik) {
+                //prindime välja küsimustiku pealkirja
+                echo "<h3>{$kysimustik["pealkiri"]}</h3>";
+
+                //Otsime välja kasutaja tulemused, mis selle küsimustiku kohta on olemas
+                $sql = "SELECT id as '#', millal_esitatud as 'Esitamise aeg', kaua_l2ks as 'Kulunud aeg', punkte as Tulemus, l2bitud as 'Läbitud' FROM markask_tulemused WHERE kasutajad_id='{$user_id}' AND kysimustikud_id='{$kysimustik['id']}'";
+                $tulemused = get_data($sql, $connection);
+                //prindime tulemused välja
+
+                echo "<div id='tulemused'>";
+                if (!empty($tulemused)){
+                    display_data($tulemused);
+                } else {
+                    echo "Sa ei ole veel seda testi teinud!";
+                }
+                echo "</div><br>";
+
+                //anname nupu testile vastamiseks
+                echo "<button type='button' onclick=\"location.href='?mode=kysimused&qid={$kysimustik['id']}'\">Vasta testile</button>";
+            }
+
+
+
+        } elseif (($_SESSION["roll"])=="admin") {
+
+            $kysitluse_number = 1;
+            //käime iga küsimustiku läbi
+            foreach($kysimustikud as $kysimustik) {
+                //prindime välja küsimustiku pealkirja
+                echo "<h3>Küsitlus nr. ".$kysitluse_number.".: ".$kysimustik["pealkiri"]."</h3>";
+                $kysitluse_number++;
+                //Otsime välja küsimused, mis selle küsimustiku kohta on olemas
+                $sql = "SELECT id as '#', kysimus as 'Küsimus', max_punktid as 'Maksimum tulemus' FROM markask_kysimused WHERE kysimustik_id='{$kysimustik['id']}'";
+                $tulemused = get_data($sql, $connection);
+                //prindime tulemused välja
+                echo "<div id='tulemused'>";
+                display_data($tulemused);
+                echo "</div>";
+            }
+
+            //siia tuleb tulevikus võimalus uusi küsimusi sisestada
+            echo "<br><br><p style='font-size: small'>*Siia tuleb tulevikus võimalus lisada uusi küsitlusi ning küsimusi</p>";
+        }
+
+        require_once('view/testid.php');
+        require_once('view/foot.html');
+
+    }
+}
+
+        /*$kysimused=array(
+    array("kysimus_id"=>"1", "kysimus"=>"mitu Sõrme on inimesel",
+        "vastused" => array (
+            array("variant"=>"5", "value" => "false"),
+            array("variant"=>"12", "value" => "false"),
+            array("variant"=>"10", "value" => "true")
+        ),
+    ),*/
+
+function kuva_kysimused () {
+    if (empty($_SESSION["roll"]) || empty($_SESSION["user"])) {
+        header("Location: ?mode=logisisse");
+    } elseif (empty($_GET['qid'])) {
+        header("Location: ?mode=VajutaIkka6igetNuppu");
+    }   else {
+        require_once('view/head.php');
+        echo "<form method='POST' action='?mode=vastused'>";
+
+        $qid = htmlspecialchars($_GET['qid']);
+        $j2rjekorranumber = 1;
+        global $connection;
+        $sql = "SELECT id, kysimus FROM markask_kysimused WHERE kysimustik_id='{$qid}'";
+        $kysimused = get_data($sql, $connection);
+
+        //echo"kysimused<br>";
+        //print_r2($kysimused);
+
+        foreach ($kysimused as $kysimus) {
+            echo "<h2>Küsimus nr.{$j2rjekorranumber}</h2>";
+            echo "<p>{$kysimus['kysimus']}</p>";
+            $j2rjekorranumber++;
+
+            $sql = "SELECT id, vastuse_variant FROM markask_vastused WHERE kysimuse_id='{$kysimus['id']}'";
+            $vastused = get_data($sql, $connection);
+
+            //echo"vastused<br>";
+            //print_r2($vastused);
+
+            foreach ($vastused as $vastus){
+
+                //echo "vastus <br> ";
+                //print_r2($vastus);
+                echo "<p><input type='radio' value='{$vastus['vastuse_variant']}' name='{$kysimus['id']}' id='{$kysimus['id']}{$vastus['vastuse_variant']}'><label for='{$kysimus['id']}{$vastus['vastuse_variant']}'>{$vastus['vastuse_variant']}</label></p>";
+            }
+
+        }
+
+        echo "<button type=\"submit\">Vasta!</button></form>";
+        require_once('view/foot.html');
+        }
+};
+
+function print_r2($val){
+    echo '<pre>';
+    print_r($val);
+    echo  '</pre>';
+}
+
+function kuva_vastused (){
+    if (empty($_SESSION["roll"]) || empty($_SESSION["user"])) {
+        header("Location: ?mode=logisisse");
+    } else {
+        include('view/kysimused.php');
+        global $kysimused;
+        $_SESSION['valedvastused'] = 0;
+        $_SESSION['$oigedvastused'] = 0;
+
+        if (empty($_POST)) {
+            // $_SESSION['vastatud']='false';
+            header('Location: ?mode=kysimused');
+        } else {
+            foreach ($_POST as $v_id => $v) {
+                foreach ($kysimused as &$kysimus) {
+                    if ($kysimus['kysimus_id'] == $v_id) {
+                        foreach ($kysimus['vastused'] as $kysimusevariant){
+                            if ($kysimusevariant['variant'] == $v)
+                                if ($kysimusevariant['value'] == 'true') {
+                                    $_SESSION['$oigedvastused']++;
+                                } else {
+                                    $_SESSION['valedvastused']++;
+                                }
+                        }
                     }
                 }
             }
-        }
-        $tulemusi_kokku = $_SESSION['$oigedvastused'] + $_SESSION['valedvastused'];
-        require_once('view/head.php');
+            $tulemusi_kokku = $_SESSION['$oigedvastused'] + $_SESSION['valedvastused'];
+            require_once('view/head.php');
 
-        echo "<div id='vastus'><p>Sinu tulemus: Said  {$_SESSION['$oigedvastused']} õiget vastust {$tulemusi_kokku} vastusest</p></div>";
+            echo "<div id='vastus'><p>Sinu tulemus: Said  {$_SESSION['$oigedvastused']} õiget vastust {$tulemusi_kokku} vastusest</p></div>";
 
-        require_once('view/foot.html');
-    };
+            require_once('view/foot.html');
+        };
+    }
 }
 
 function kuva_pealeht () {

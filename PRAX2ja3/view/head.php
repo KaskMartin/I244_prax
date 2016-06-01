@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="view/style.css">
     <title>Questionaator</title>
     <script src="http://code.jquery.com/jquery-1.12.2.min.js"></script>
+    <script src="j2lita.js"></script>
+
 </head>
 
 <body>
@@ -35,13 +37,13 @@
 
         <li>
             <a <?php if (empty($_SESSION["user"])) {
-                echo "style = 'display: none'";}
-            else {echo "style = 'display: inherit'";}
-            ?> href="?mode=testid">Testid</a>
+                    echo "style = 'display: none'";}
+                else {echo "style = 'display: inherit'";}
+                ?> href="?mode=testid"">Küsitlused</a>
         </li>
 
         <li>
-            <a <?php if (empty($_SESSION["user"])) {
+            <a <?php if (!(isset($_SESSION["roll"]) ? ($_SESSION["roll"]=='user') : false)) {
                 echo "style = 'display: none'";}
             else {echo "style = 'display: inherit'";}
             ?> href="?mode=kysimused">Küsimused</a>
@@ -55,8 +57,8 @@
         </li>
 
         <?php if (!empty($_SESSION["user"])) {
-        echo "<li id='kasutajainfo'>kasutaja: {$_SESSION['user']} <br>";
-            echo "roll: {$_SESSION['roll']} </li>";
+        echo "<li id='kasutajainfo'>Kasutaja: {$_SESSION['user']} <br>";
+            echo "Roll: {$_SESSION['roll']} </li>";
         }
         ?>
     </ul>

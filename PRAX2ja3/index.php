@@ -18,9 +18,6 @@ switch ($mode) {
     case 'kysimused':
         kuva_kysimused();
         break;
-    case 'laekysimus':
-        kuva_laekysimus();
-        break;
     case 'logisisse':
         kuva_logisisse();
         break;
