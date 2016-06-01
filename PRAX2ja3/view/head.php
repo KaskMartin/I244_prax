@@ -57,8 +57,8 @@
         </li>
 
         <?php if (!empty($_SESSION["user"])) {
-        echo "<li id='kasutajainfo'>Kasutaja: {$_SESSION['user']} <br>";
-            echo "Roll: {$_SESSION['roll']} </li>";
+        echo "<li id='kasutajainfo'>Kasutaja: ".htmlspecialchars($_SESSION['user'])." <br>";
+            echo "Roll: ".htmlspecialchars($_SESSION['roll'])." </li>";
         }
         ?>
     </ul>

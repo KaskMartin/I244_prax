@@ -117,11 +117,13 @@ function kuva_logisisse () {
 
                 //kui kasutaja leidub siis lisame sessiooni tema info
                 if (mysqli_num_rows($result) > 0) {
-                    $roll = mysqli_fetch_assoc(mysqli_query($connection, $query))['roll'];
-                    print_r($roll);
+                    $x=mysqli_fetch_assoc($result);
+                    $roll = $x['roll'];
+                    $user_id = $x['id'];
                     alusta_sessioon();
                     $_SESSION["user"] = $username;
                     $_SESSION["roll"] = $roll;
+                    $_SESSION["user_id"] = $user_id;
 
                     //vabastame päringu, kuna kasutaja päringut enam vaja ei lähe
                     mysqli_free_result($result);
@@ -298,16 +300,17 @@ function kuva_testid () {
     }
 }
 
-        /*$kysimused=array(
-    array("kysimus_id"=>"1", "kysimus"=>"mitu Sõrme on inimesel",
-        "vastused" => array (
-            array("variant"=>"5", "value" => "false"),
-            array("variant"=>"12", "value" => "false"),
-            array("variant"=>"10", "value" => "true")
-        ),
-    ),*/
+/*$kysimused=array(
+array("kysimus_id"=>"1", "kysimus"=>"mitu Sõrme on inimesel",
+"vastused" => array (
+    array("variant"=>"5", "value" => "false"),
+    array("variant"=>"12", "value" => "false"),
+    array("variant"=>"10", "value" => "true")
+),
+),*/
 
 function kuva_kysimused () {
+
     if (empty($_SESSION["roll"]) || empty($_SESSION["user"])) {
         header("Location: ?mode=logisisse");
     } elseif (empty($_GET['qid'])) {
@@ -317,6 +320,7 @@ function kuva_kysimused () {
         echo "<form method='POST' action='?mode=vastused'>";
 
         $qid = htmlspecialchars($_GET['qid']);
+        echo "<input type='hidden' name='kysimustiku_id' value='{$qid}'>";
         $j2rjekorranumber = 1;
         global $connection;
         $sql = "SELECT id, kysimus FROM markask_kysimused WHERE kysimustik_id='{$qid}'";
@@ -344,10 +348,11 @@ function kuva_kysimused () {
             }
 
         }
+        echo "<p><input type=\"hidden\" name=\"timestamp\" id=\"timestamp\" value=\"".time()."\"/></p>";
 
         echo "<button type=\"submit\">Vasta!</button></form>";
         require_once('view/foot.html');
-        }
+    }
 };
 
 function print_r2($val){
@@ -357,37 +362,63 @@ function print_r2($val){
 }
 
 function kuva_vastused (){
+    global $connection;
+    $l6ppaeg=time();
+
     if (empty($_SESSION["roll"]) || empty($_SESSION["user"])) {
         header("Location: ?mode=logisisse");
     } else {
-        include('view/kysimused.php');
-        global $kysimused;
-        $_SESSION['valedvastused'] = 0;
-        $_SESSION['$oigedvastused'] = 0;
 
-        if (empty($_POST)) {
-            // $_SESSION['vastatud']='false';
-            header('Location: ?mode=kysimused');
-        } else {
-            foreach ($_POST as $v_id => $v) {
-                foreach ($kysimused as &$kysimus) {
-                    if ($kysimus['kysimus_id'] == $v_id) {
-                        foreach ($kysimus['vastused'] as $kysimusevariant){
-                            if ($kysimusevariant['variant'] == $v)
-                                if ($kysimusevariant['value'] == 'true') {
-                                    $_SESSION['$oigedvastused']++;
-                                } else {
-                                    $_SESSION['valedvastused']++;
-                                }
-                        }
+        require_once('view/head.php');
+        //print_r2($_POST);
+        $punkte = $vastatud = $oigesti_vastatud = $läbitud = 0;
+        $qid = '';
+
+        foreach ($_POST as $key => $val) {
+            if (htmlspecialchars($key) == 'timestamp') {
+                $algaeg = $val;
+            } elseif (htmlspecialchars($key) == 'kysimustiku_id') {
+                $qid = $val;
+            } elseif (empty($qid)) {
+                break;
+            } else {
+                $sql = "SELECT * FROM markask_vastused WHERE kysimuse_id = $key";
+                $variandid = get_data($sql, $connection);
+                foreach ($variandid as $variant) {
+                    if ($variant['vastuse_variant'] == $val) {
+                        $vastatud++;
+                        $oigesti_vastatud += $variant['t6ev22rtus'];
+                        $punkte += $variant['punkte'];
+                        break;
                     }
                 }
             }
-            $tulemusi_kokku = $_SESSION['$oigedvastused'] + $_SESSION['valedvastused'];
-            require_once('view/head.php');
+        }
 
-            echo "<div id='vastus'><p>Sinu tulemus: Said  {$_SESSION['$oigedvastused']} õiget vastust {$tulemusi_kokku} vastusest</p></div>";
+        $kulunud_aeg = date("H:i:s", $l6ppaeg - $algaeg - date('02:00:00'));
+        $kasutajad_id = $_SESSION["user_id"];
+        $sql = "SELECT * FROM `markask_kysimustikud` WHERE id=$qid";
+        $k = get_data($sql, $connection)['0'];
 
+        //print_r2($k);
+        //print_r2($_SESSION);
+
+        if ($punkte >= $k['l2vend'] && $kulunud_aeg < $k['ajalimiit']) {
+            $läbitud = 1;
+        }
+
+        $sql = "INSERT INTO `markask_tulemused` (`kasutajad_id`, `kysimustikud_id`, `kaua_l2ks`, `punkte`, `l2bitud`) VALUES ( '{$kasutajad_id}' , '{$qid}','{$kulunud_aeg}' ,'{$punkte}' ,'{$läbitud}');";
+        $result = mysqli_query($connection, $sql);
+        if (!empty($result)) {
+            echo "Andmed sisestatud!<br>";
+            echo "
+            kasutajad_id=$kasutajad_id<br>
+            kysimustikud_i=$qid<br>
+            kaua_l2ks=$kulunud_aeg<br>
+            punkte=$punkte<br>
+            l2bitud=$läbitud<br>";
+
+            echo "<p>Tänan et leidsite aega vastata!</p>";
             require_once('view/foot.html');
         };
     }
